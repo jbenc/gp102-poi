@@ -182,6 +182,12 @@ static int parse_one_coord(const char **pos, const char *mod, double *coord)
 	return 0;
 }
 
+static int parse_middle(const char **pos)
+{
+	get_letter(pos, ",;");
+	return 0;
+}
+
 static int parse_end(const char **pos)
 {
 	skip_white(pos);
@@ -193,6 +199,7 @@ static void parse_coords(const char *arg, double *lat, double *lon)
 	const char *pos = arg;
 
 	if (parse_one_coord(&pos, "NS", lat) ||
+	    parse_middle(&pos) ||
 	    parse_one_coord(&pos, "EW", lon) ||
 	    parse_end(&pos)) {
 		int i;
