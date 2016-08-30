@@ -199,6 +199,18 @@ static void parse_coords(const char *arg, double *lat, double *lon)
 	}
 }
 
+static const char *supported = "0123456789-.:/_";
+
+static int check_name(const char *name)
+{
+	while (*name) {
+		if (!index(supported, *name))
+			return 1;
+		name++;
+	}
+	return 0;
+}
+
 static int write_poi(const char *name, const char *arg)
 {
 	struct poi_data data = {
@@ -208,6 +220,10 @@ static int write_poi(const char *name, const char *arg)
 	};
 	double lat, lon;
 
+	if (check_name(name)) {
+		fprintf(stderr, "Error: unsupported char in name. Supported chars are: %s\n", supported);
+		return 1;
+	}
 	parse_coords(arg, &lat, &lon);
 
 	memset(&data.unused, 0xff, sizeof(data.unused));
